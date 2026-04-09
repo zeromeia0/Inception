@@ -3,14 +3,20 @@ FROM debian:bookworm
 RUN apt-get update && apt-get install -y \
     php-fpm \
     php-mysql \
+    mariadb-client \
     curl \
     wget \
-    mariadb-client \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    tar \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf 
-#lembrar que a versao php pode mudar, verificar na 42
-COPY toold/setup.sh /usr/local/bin/setup.sh
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
+
+COPY conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
+#lembrar que a versao pode mudar, confrimar na 42
+COPY tools/setup.sh /usr/local/bin/setup.sh
 
 RUN chmod +x /usr/local/bin/setup.sh
 
