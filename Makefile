@@ -6,7 +6,58 @@
 #    By: vvazzs <vvazzs@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/09 10:34:17 by vvazzs            #+#    #+#              #
-#    Updated: 2026/04/09 10:34:18 by vvazzs           ###   ########.fr        #
+#    Updated: 2026/04/10 09:03:26 by vvazzs           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+NAME = inception
+COMPOSE = docker compose -f srcs/docker-compose.yml
+
+all: up
+
+up:
+	$(COMPOSE) up --build -d
+
+down:
+	$(COMPOSE) down
+
+start:
+	$(COMPOSE) start
+
+stop:
+	$(COMPOSE) stop
+
+restart: down up
+
+build:
+	$(COMPOSE) build
+
+logs:
+	$(COMPOSE) logs -f
+
+status:
+	@echo "=== Containers ==="
+	$(COMPOSE) ps
+
+	@echo "\n=== Docker status ==="
+	docker ps
+
+	@echo "\n=== Volumes ==="
+	docker volume ls
+
+	@echo "\n=== Networks ==="
+	docker network ls
+
+inspect:
+	docker inspect $$(docker ps -q)
+
+clean:
+	$(COMPOSE) down -v --rmi all
+
+fclean: clean
+	sudo rm -rf /home/vvazzs/data/mariadb
+	sudo rm -rf /home/vvazzs/data/wordpress
+
+re: fclean all
+
+.PHONY: all up down start stop restart build logs ps clean fclean re
