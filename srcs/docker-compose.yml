@@ -1,16 +1,24 @@
 services:
   mariadb:
     build: ./requirements/mariadb
-    env_file: .env
+    container_name: mariadb
+    env_file:
+      - .env
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - inception
     restart: always
+    secrets:
+      - db_password
+      - db_root_password
+      - db_admin_password
 
   wordpress:
     build: ./requirements/wordpress
-    env_file: .env
+    container_name: wordpress
+    env_file:
+      - .env
     volumes:
       - wordpress_data:/var/www/html
     networks:
@@ -18,12 +26,18 @@ services:
     depends_on:
       - mariadb
     restart: always
+    secrets:
+      - db_password
+      - wp_admin_password
+      - wp_user_password
 
   nginx:
     build: ./requirements/nginx
-    env_file: .env
+    container_name: nginx
+    env_file:
+      - .env
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/html:ro
     ports:
       - "443:443"
     networks:
@@ -37,16 +51,28 @@ secrets:
     file: ../secrets/db_password.txt
   db_root_password:
     file: ../secrets/db_root_password.txt
+  db_admin_password:
+    file: ../secrets/db_admin_password.txt
   wp_admin_password:
     file: ../secrets/wp_admin_password.txt
   wp_user_password:
     file: ../secrets/wp_user_password.txt
 
-
 volumes:
   db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/vvazzs/data/mariadb
+
   wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/vvazzs/data/wordpress
 
 networks:
   inception:
-
+    driver: bridge
