@@ -64,14 +64,14 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/vvazzs/data/mariadb
+      device: /home/vboxuser/data/mariadb #the vboxuser should be the user on VM
 
   wordpress_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/vvazzs/data/wordpress
+      device: /home/vboxuser/data/wordpress
 
 networks:
   inception:

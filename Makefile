@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vvazzs <vvazzs@student.42.fr>              +#+  +:+       +#+         #
+#    By: vboxuser <vboxuser@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/04/09 10:34:17 by vvazzs            #+#    #+#              #
-#    Updated: 2026/04/10 09:03:26 by vvazzs           ###   ########.fr        #
+#    Created: 2026/04/09 10:34:17 by vboxuser            #+#    #+#              #
+#    Updated: 2026/04/10 09:03:26 by vboxuser           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@ COMPOSE = docker compose -f srcs/docker-compose.yml
 all: up
 
 up:
+	mkdir -p /home/vboxuser/data/mariadb
+	mkdir -p /home/vboxuser/data/wordpress
 	$(COMPOSE) up --build -d
 
 down:
@@ -55,8 +57,8 @@ clean:
 	$(COMPOSE) down -v --rmi all
 
 fclean: clean
-	sudo rm -rf /home/vvazzs/data/mariadb
-	sudo rm -rf /home/vvazzs/data/wordpress
+	sudo rm -rf /home/vboxuser/data/mariadb
+	sudo rm -rf /home/vboxuser/data/wordpress
 
 re: fclean all
 

@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
+#this above downloads and install wordpress cli
 
 COPY conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 #lembrar que a versao pode mudar, confrimar na 42
