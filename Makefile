@@ -53,6 +53,23 @@ status:
 inspect:
 	docker inspect $$(docker ps -q)
 
+maria_fix:
+	docker compose down -v
+	docker system prune -af
+	rm -rf /home/vboxuser/data/mariadb/*
+
+gtm:
+	docker exec -it mariadb /bin/bash
+
+gin:
+	docker exec -it nginx /bin/bash
+
+giw:
+	docker exec -it wordpress /bin/bash
+
+# 	run this on school docker exec -it wordpress ls -la /var/www/html
+
+
 clean:
 	$(COMPOSE) down -v --rmi all
 

@@ -18,14 +18,17 @@ if [ ! -d "$DB_PATH/mysql" ]; then
 fi
 
 echo "Starting MariaDB temporarily..."
-mysqld_safe --datadir="$DB_PATH" --socket="$SOCKET" &
+mysqld --user=mysql --datadir="$DB_PATH" --socket="$SOCKET" --skip-networking &
 
-until mariadb-admin --socket="$SOCKET" ping --silent; do
+until mariadb-admin --protocol=socket --socket="$SOCKET" ping --silent; do
     sleep 1
 done
 
 echo "Configuring MariaDB..."
-mariadb --socket="$SOCKET" -u root << EOF
+
+unset MYSQL_HOST
+
+mariadb --protocol=socket --socket="$SOCKET" -u root << EOF
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
 
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
@@ -40,7 +43,7 @@ FLUSH PRIVILEGES;
 EOF
 
 echo "Stopping temporary MariaDB..."
-mariadb-admin --socket="$SOCKET" -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
+mariadb-admin --protocol=socket --socket="$SOCKET" -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
 
 echo "Starting MariaDB in foreground..."
-exec mysqld_safe --datadir="$DB_PATH"
+exec mysqld --user=mysql --datadir="$DB_PATH" --socket="$SOCKET"
