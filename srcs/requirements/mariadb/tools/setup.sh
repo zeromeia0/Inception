@@ -7,6 +7,7 @@ MYSQL_ADMIN_PASSWORD="$(cat /run/secrets/db_admin_password)"
 
 DB_PATH="/var/lib/mysql"
 SOCKET="/run/mysqld/mysqld.sock"
+INIT_FLAG="$DB_PATH/.setup_done"
 
 mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld
@@ -19,7 +20,9 @@ chown -R mysql:mysql /var/log/mysql
 if [ ! -d "$DB_PATH/mysql" ]; then
     echo "Initializing MariaDB database..."
     mariadb-install-db --user=mysql --datadir="$DB_PATH"
+fi
 
+if [ ! -f "$INIT_FLAG" ]; then
     echo "Starting MariaDB temporarily..."
     mysqld --user=mysql --datadir="$DB_PATH" --socket="$SOCKET" --skip-networking &
 
@@ -41,6 +44,9 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 
 FLUSH PRIVILEGES;
 EOF
+
+    touch "$INIT_FLAG"
+    chown mysql:mysql "$INIT_FLAG"
 
     echo "Stopping temporary MariaDB..."
     mariadb-admin --protocol=socket --socket="$SOCKET" -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
