@@ -14,7 +14,7 @@ chown -R mysql:mysql "$DB_PATH"
 
 mkdir -p /var/log/mysql
 touch /var/log/mysql/error.log
-chown -R mysql:mysqql /var/log/mysql
+chown -R mysql:mysql /var/log/mysql
 
 if [ ! -d "$DB_PATH/mysql" ]; then
     echo "Initializing MariaDB database..."
