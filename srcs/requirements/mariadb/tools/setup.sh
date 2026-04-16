@@ -31,6 +31,8 @@ if [ ! -f "$INIT_FLAG" ]; then
     done
 
     echo "Configuring MariaDB..."
+    unset MYSQL_HOST
+
     mariadb --protocol=socket --socket="$SOCKET" -u root << EOF
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
 
