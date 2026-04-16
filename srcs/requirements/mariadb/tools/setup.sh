@@ -12,7 +12,10 @@ mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld
 chown -R mysql:mysql "$DB_PATH"
 
-mkdir -p /var/log/mysql/error.log
+mkdir -p /var/log/mysql
+touch /var/log/mysql/error.log
+chown -R mysql:mysqql /var/log/mysql
+
 if [ ! -d "$DB_PATH/mysql" ]; then
     echo "Initializing MariaDB database..."
     mariadb-install-db --user=mysql --datadir="$DB_PATH"
