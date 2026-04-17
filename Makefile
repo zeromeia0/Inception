@@ -16,8 +16,8 @@ COMPOSE = docker compose -f srcs/docker-compose.yml
 all: up
 
 up:
-	mkdir -p /home/vboxuser/data/mariadb
-	mkdir -p /home/vboxuser/data/wordpress
+	mkdir -p /home/vivaz-ca/data/mariadb
+	mkdir -p /home/vivaz-ca/data/wordpress
 	$(COMPOSE) up --build -d
 
 down:
@@ -53,11 +53,6 @@ status:
 inspect:
 	docker inspect $$(docker ps -q)
 
-maria_fix:
-	docker compose down -v
-	docker system prune -af
-	rm -rf /home/vboxuser/data/mariadb/*
-
 gtm:
 	docker exec -it mariadb /bin/bash
 
@@ -67,15 +62,14 @@ gin:
 giw:
 	docker exec -it wordpress /bin/bash
 
-# 	run this on school docker exec -it wordpress ls -la /var/www/html
-
-
+tls:
+	openssl s_client -connect vivaz-ca.42.fr:443 -tls1_3
 clean:
 	$(COMPOSE) down -v --rmi all
 
 fclean: clean
-	sudo rm -rf /home/vboxuser/data/mariadb
-	sudo rm -rf /home/vboxuser/data/wordpress
+	sudo rm -rf /home/vivaz-ca/data/mariadb
+	sudo rm -rf /home/vivaz-ca/data/wordpress
 
 re: fclean all
 
