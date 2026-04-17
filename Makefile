@@ -64,8 +64,24 @@ giw:
 
 tls:
 	openssl s_client -connect vivaz-ca.42.fr:443 -tls1_3
+
 clean:
 	$(COMPOSE) down -v --rmi all
+
+eval_clear:
+	@echo "Stopping and removing all Docker resources..."
+	-docker stop $$(docker ps -qa)
+	-docker rm $$(docker ps -qa)
+	-docker rmi -f $$(docker images -qa)
+	-docker volume rm $$(docker volume ls -q)
+	-docker network rm $$(docker network ls -q) 2>/dev/null
+	@echo "Docker environment cleaned."
+
+http_prove:
+	echo "Trying to access https"
+	curl -I https://vivaz-ca.42.fr
+	echo "Trying to access http"
+	curl -I http://vivaz-ca.42.fr
 
 fclean: clean
 	sudo rm -rf /home/vivaz-ca/data/mariadb

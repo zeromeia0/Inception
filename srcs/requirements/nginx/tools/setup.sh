@@ -13,7 +13,7 @@ if [ ! -f "$CERT" ] || [ ! -f "$KEY" ]; then
         -newkey rsa:2048 \
         -keyout "$KEY" \
         -out "$CERT" \
-        -subj "/C=PT/ST=Lisbon/L=Lisbon/O=42/OU=student/CN=${DOMAIN_NAME}"
+        -subj "/C=PT/ST=Lisbon/L=Lisbon/O=42/OU=student/CN=${DOMAIN_NAME}" #fills certificate info automatically
 fi
 
 echo "Starting nginx..."
