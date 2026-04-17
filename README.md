@@ -105,4 +105,3 @@ AI tools were used to:
 - Review scripts and improve explanations
 
 All generated content was reviewed, tested, and fully understood before being included in the project.
-```
